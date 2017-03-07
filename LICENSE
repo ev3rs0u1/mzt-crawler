@@ -1,14 +1,3 @@
-# mzt-crawlert
-Clojure 函数式编程初探 (ง •̀_•́)ง
-
-## Usage
-~~~
-lein run
-lein uberjar
-java -jar *.jar
-~~~
-
-## License
         DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
                 Version 2, December 2004
 
