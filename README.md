@@ -1,4 +1,4 @@
-# mzt-crawlert
+# mzt-crawler
 Clojure 函数式编程初探 (ง •̀_•́)ง
 
 ## Usage
