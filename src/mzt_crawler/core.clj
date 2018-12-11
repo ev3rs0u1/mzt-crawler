@@ -1,43 +1,46 @@
 (ns mzt-crawler.core
   (:gen-class)
-  (:use [clojure.string :only (split)])
+  (:use selmer.parser)
+  (:require [clojure.string :as string])
   (:require [clojure.java.io :as io])
   (:import [org.jsoup Jsoup])
   (:import [org.jsoup.nodes Element])
   (:import [org.jsoup.select Elements]))
 
 ;; constants
-(def URL "http://www.dbmeinv.com/dbgroup/rank.htm?pager_offset=")
-(def PATH "./mzt/")
+(def URL "https://www.w24j.com/cn/vl_update.php?&mode=&page=")
+(def TMPL "tmpl.html")
 
-;; http get response
-(defn http-get [page]
+(defn pwd
+  "Returns current working directory as a String.  (Like UNIX 'pwd'.)
+  Note: In Java, you cannot change the current working directory."
+  []
+  (System/getProperty "user.dir"))
+
+(defn http-get
+  "http get response"
+  [page]
   (.get (Jsoup/connect (str URL page))))
 
-;; css select
-(defn css-select [page css]
-  (.select page css))
+(defn replace-links
+  "replace lagre image link"
+  [links]
+  (map (fn [x] (string/replace x #"ps" "pl")) links))
 
-;; download image
-(defn download-image [url]
-  (def filename (str PATH (last (split url #"/"))))
-  (with-open [in (io/input-stream url)
-              out (io/output-stream filename)]
-    (io/copy in out)))
-    
-;; crawler
-(defn crawler [page]
-  (def html (http-get page))
-  (def elems (css-select html "img.height_min"))
-  (doseq [e elems]
-    (def src (.attr e "src"))
-    (def title (.attr e "alt"))
-    (printf "Title: %s\n" title)
-    (printf "Download: [%s]\n\n" src)
-    (download-image src)))
+(defn crawler
+  "crawl and generate html"
+  [page]
+  (let [html (http-get page)
+        elems (.select html "div.video")
+        ids (map (fn [x] (.text (.select x "a > .id"))) elems)
+        thumbs (map (fn [x] (str "http:" (.attr (.select x "a > img") "src"))) elems)
+        pics (replace-links thumbs)
+        data (apply map vector [ids thumbs pics])]
+    (selmer.parser/set-resource-path! (pwd))
+    (println (render-file TMPL {:data data}))))
 
 ;; main
 (defn -main [& args]
-  (def page (first args))
-  (def random (int (rand 900)))
-  (crawler (if-not (nil? page) page random)))
+  (let [page (first args)
+        random (int (rand 1024))]
+    (crawler (if-not (nil? page) page random))))

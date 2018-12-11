@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="zh-cn">
+    <head>
+        <meta charset="UTF-8">
+        <title>Jav crawler report</title>
+        <meta name="description" content="Jav Crawl form clojure">
+        <meta name="author" content="ev3rs0u1">
+        <meta name="viewport" content="width=device-width; initial-scale = 1.0; maximum-scale=1.0; user-scalable=no" />
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.2/jquery.fancybox.min.css" rel="stylesheet" media="screen">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.2/jquery.fancybox.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.4/clipboard.min.js"></script>
+        <style>
+            .gallery {
+                display: inline-block;
+                margin: 45px 0;
+            }
+        </style>
+        <script>
+            $(document).ready(function () {
+                $(".fancybox").fancybox({
+                    openEffect: "elastic",
+                    closeEffect: "elastic"
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container">
+            <div class="row">
+                <div class='list-group gallery'>
+                    {% for v in data %}
+                    <div class='col-sm-4 col-xs-6 col-md-3 col-lg-3'>
+                        <a href="#" class="clip" data-clipboard-text="{{ v.0 }}">
+                            <span class="glyphicon glyphicon-file"></span>
+                        </a>
+                        <a class="thumbnail fancybox" rel="ligthbox" href="{{ v.2 }}">
+                            <img class="img-responsive" alt="" src="{{ v.1 }}" />
+                            <div class='text-center'>
+                                <strong class='text-muted'>{{ v.0 }}</strong>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <script>
+            var clipboard = new ClipboardJS('.clip');
+            clipboard.on('success', function (e) {
+                console.info('Action:', e.action);
+                console.info('Text:', e.text);
+                console.info('Trigger:', e.trigger);
+                e.clearSelection();
+            });
+            clipboard.on('error', function (e) {
+                console.error('Action:', e.action);
+                console.error('Trigger:', e.trigger);
+            });
+        </script>
+    </body>
+</html>
