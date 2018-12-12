@@ -32,8 +32,8 @@
   [page]
   (let [html (http-get page)
         elems (.select html "div.video")
-        ids (map (fn [x] (.text (.select x "a > .id"))) elems)
-        thumbs (map (fn [x] (str "http:" (.attr (.select x "a > img") "src"))) elems)
+        ids (map #(.text (.select % "a > .id")) elems)
+        thumbs (map #(str "http:" (.attr (.select % "a > img") "src")) elems)
         pics (replace-links thumbs)
         data (apply map vector [ids thumbs pics])]
     (selmer.parser/set-resource-path! (pwd))
