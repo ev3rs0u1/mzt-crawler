@@ -6,7 +6,7 @@ Clojure 函数式编程初探 (ง •̀_•́)ง
 lein run
 lein uberjar
 
-run.bat
+run.cmd
 ~~~
 
 ## License
