@@ -1,8 +1,8 @@
 (ns mzt-crawler.core
   (:gen-class)
   (:use selmer.parser)
-  (:require [clojure.string :as string])
   (:require [clojure.java.io :as io])
+  (:require [clojure.string :as string])
   (:import [org.jsoup Jsoup])
   (:import [org.jsoup.nodes Element])
   (:import [org.jsoup.select Elements]))
@@ -25,7 +25,7 @@
 (defn replace-links
   "replace lagre image link"
   [links]
-  (map (fn [x] (string/replace x #"ps" "pl")) links))
+  (map #(string/replace % #"ps" "pl") links))
 
 (defn crawler
   "crawl and generate html"
